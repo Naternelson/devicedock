@@ -1,0 +1,17 @@
+/* apply the fontSize to everything */
+
+html {
+  /* Set the default font size for the page */
+  font-size: 12px;
+}
+body {
+  /* Set the default text color for the body, affecting all text not explicitly styled */
+  color: #333333;
+  background-color: #f5f5f5;  
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol';
+}
+
+code {
+  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
+    monospace;
+}

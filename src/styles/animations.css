@@ -1,0 +1,30 @@
+@keyframes fadeup {
+	from {
+		opacity: 0;
+		transform: translateY(20px);
+	}
+	to {
+		opacity: 1;
+		transform: translateY(0);
+	}
+}
+
+.fadeup {
+	position: relative;
+	animation: fadeup 0.6s cubic-bezier(0.16, 1, 0.3, 1)  both;
+}
+
+@keyframes fadedown {
+	from {
+		opacity: 0;
+		transform: translateY(-20px);
+	}
+	to {
+		opacity: 1;
+		transform: translateY(0);
+	}
+}
+.fadedown {
+	position: relative;
+	animation: fadedown 0.6s cubic-bezier(0.16, 1, 0.3, 1)  both;
+}
