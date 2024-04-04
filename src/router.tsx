@@ -1,5 +1,19 @@
 import { createBrowserRouter, redirect } from 'react-router-dom';
-import { DashboardHome, Error404, Home, LoginPage, PrivacyPolicy, RootLayout, SignupPage, TermsPage } from './pages';
+import {
+	DashboardHome,
+	DashboardLayout,
+	Error404,
+	Home,
+	LoginPage,
+	OrdersPage,
+	PrivacyPolicy,
+	RootLayout,
+	ProductsPage,
+	SignupPage,
+	TermsPage,
+	NewProductForm,
+	ProductsIndexPage,
+} from './pages';
 import { collection, getDocs, getFirestore, limit, query, where } from 'firebase/firestore';
 import { getAuth } from 'firebase/auth';
 
@@ -14,12 +28,12 @@ export default createBrowserRouter([
 				element: <Home />,
 			},
 			{
-				path: "privacy",
-				element: <PrivacyPolicy />
+				path: 'privacy',
+				element: <PrivacyPolicy />,
 			},
 			{
-				path: "terms",
-				element: <TermsPage />
+				path: 'terms',
+				element: <TermsPage />,
 			},
 			{
 				path: 'login',
@@ -27,7 +41,7 @@ export default createBrowserRouter([
 				loader: async () => {
 					getAuth().currentUser && redirect('/dashboard');
 					return {};
-				}
+				},
 			},
 			{
 				path: 'signup',
@@ -50,7 +64,7 @@ export default createBrowserRouter([
 						if (docSnap.empty) return { error: 'No organization found for given link.' };
 						const d = docSnap.docs[0].data();
 						return {
-                            organizationCode: d.code,
+							organizationCode: d.code,
 							organizationName: d.name,
 							organizationId: d.id,
 							error: null,
@@ -63,11 +77,32 @@ export default createBrowserRouter([
 			},
 			{
 				path: 'dashboard',
-				element: <DashboardHome />,
+				element: <DashboardLayout />,
 				loader: async () => {
 					!getAuth().currentUser && redirect('/login');
 					return {};
 				},
+				children: [
+					{
+						index: true,
+						element: <DashboardHome />,
+					},
+					{
+						path: 'products',
+						element: <ProductsPage />,
+						children: [{
+							index:true, 
+							element: <ProductsIndexPage/>
+						},{
+							path: "new",
+							element: <NewProductForm/>
+						}]
+					},
+					{
+						path: 'orders',
+						element: <OrdersPage />,
+					},
+				],
 			},
 		],
 	},

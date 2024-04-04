@@ -7,12 +7,13 @@ import { LoaderOverlay } from '../LoaderOverlay';
 import { MenuItem, Select, SxProps, TextField } from '@mui/material';
 import { DatePicker, LocalizationProvider } from '@mui/x-date-pickers';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
+import dayjs, { Dayjs } from 'dayjs';
 
 export interface OrderFormData {
 	status: OrderStatus;
 	customerId: string;
 	items: Order['items'];
-	dueDate: string;
+	dueDate: Dayjs;
 	shipTo: string;
 }
 
@@ -102,7 +103,7 @@ export const ShipToField = ({sx}: {sx: SxProps}) => {
 			control={control}
 			name="shipTo"
 
-			render={({ field }) => <DatePicker {...field} slotProps={{
+			render={({ field }) => <DatePicker {...field} value={dayjs(field.value)} slotProps={{
                 textField: {
                     sx,
                     helperText: errorMessage,
@@ -135,6 +136,3 @@ export const DueDate = ({sx}: {sx: SxProps}) => {
 
 
 
-const ProductField = () => {
-    const [products, setProducts] = useState<>([]);
-}

@@ -33,6 +33,10 @@ export default createTheme({
 			secondary: '#575757', // A lighter shade for secondary text
 			disabled: '#A0A0A0', // Disabled text (can adjust as needed)
 		},
+		background: {
+			default: '#f5f5f5', // Slightly off-white background,
+			paper: '#ffffff', // White paper background
+		},
 	},
 	typography: {
 		// Use the Inter font family

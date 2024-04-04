@@ -15,6 +15,7 @@ import { FormProvider, useForm, useFormContext } from 'react-hook-form';
 import { getAuth, signInWithEmailAndPassword } from 'firebase/auth';
 import { Visibility, VisibilityOff } from '@mui/icons-material';
 import { useState } from 'react';
+import { startDb } from '../../firebase.config';
 
 interface FormData {
 	email: string;
@@ -28,6 +29,7 @@ export const LoginPage = () => {
 
 	const onSubmit = async (data: FormData) => {
 		try {
+			await startDb();
 			const res = await signInWithEmailAndPassword(getAuth(), data.email, data.password);
 			console.log(res);
 		} catch (error) {

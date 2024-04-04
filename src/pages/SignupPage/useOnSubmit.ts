@@ -3,6 +3,7 @@ import { createOrganizationWithAdmin, createUserFromToken } from '../../api/func
 import { getAuth, signInWithEmailAndPassword } from 'firebase/auth';
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { startDb } from '../../firebase.config';
 
 export type FormData = {
 	token: string;
@@ -92,6 +93,7 @@ const createWithOrg = async (data: FormData, frm: UseFormReturn<FormData, any, u
 			userPassword: data.password,
 			displayName: data.displayName,
 		});
+		await startDb();
 		await signInWithEmailAndPassword(getAuth(), data.email, data.password);
 		return { success: true, error: null };
 	} catch (error: any) {

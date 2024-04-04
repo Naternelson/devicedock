@@ -7,9 +7,11 @@ import "../../styles"
 
 export const RootLayout = () => {
 	return (
-		<Box sx={{ height: '100vh', display: 'flex', overflow: "auto", flexDirection: "column", boxSizing: "border-box" }}>
+		<Box >
 			<Box
 				sx={{
+					backgroundColor: 'background.default',
+					height: '100vh',
 					flex: 1,
 					display: 'flex',
 					flexDirection: 'column',
@@ -17,7 +19,7 @@ export const RootLayout = () => {
 				<NavBar />
 				<Outlet />
 			</Box>
-			<FooterBar />
+			{/* <FooterBar /> */}
 		</Box>
 	);
 };

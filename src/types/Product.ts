@@ -18,6 +18,7 @@ export type DocumentProduct = {
         name: string, 
         count: number, 
         pattern: string,
+        transform: 'UPPERCASE' | 'LOWERCASE' | 'NONE'
         unique: boolean,
         defaultValue: string,
         scope: "order" | "organization",
@@ -31,7 +32,7 @@ export type DocumentProduct = {
         maxSize: number, 
         pattern: string,
         unique: boolean,
-        defaultValue: string,
+        autoGen: boolean,
         scope: "order" | "organization",
         labelTemplates: string[]
     }
@@ -85,7 +86,7 @@ export class Product implements ProductType {
         maxSize: 1,
         pattern: '',
         unique: false,
-        defaultValue: '',
+        autoGen: true,
         scope: 'organization',
         labelTemplates: []
     };
