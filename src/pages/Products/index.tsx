@@ -1,4 +1,4 @@
-import { Box, Breadcrumbs, Button, Collapse, Divider, Link, Paper, Stack, Typography } from '@mui/material';
+import { Box, Breadcrumbs, Button, Collapse, Divider, Link,  Stack, Typography } from '@mui/material';
 import React, { useEffect, useRef, useState } from 'react';
 import { useOrgId } from '../../util';
 import { onSnapshot, orderBy, query } from 'firebase/firestore';
@@ -10,7 +10,7 @@ export const ProductsPage = () => {
 	return (
 		<Box display="flex" flex={1} flexDirection={'column'}>
 			<ProductsBreadcrumbs />
-			<Box display="flex" flex={1}>
+			<Box display="flex" flex={1} padding={"3rem"} paddingTop={0}>
 				<Outlet />
 			</Box>
 		</Box>
@@ -71,7 +71,6 @@ const NoProductsOverlay = () => {
 				alignItems: 'center',
 				height: '100%',
 				width: '100%',
-				outline: '1px solid red',
 			}}>
 			<Stack direction="column" alignItems="center" gap={3}>
 				<Stack direction={'column'} alignItems={'center'} width="100%">

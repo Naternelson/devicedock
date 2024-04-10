@@ -58,7 +58,7 @@ const StyledNav = styled('nav')(({ theme }) => ({
 	padding: '0 1rem',
     boxShadow: theme.shadows[2],
 	zIndex: 1000,
-	position: "fixed",
+	position: "absolute",
 	ul: {
 		listStyle: 'none',
 		display: 'flex',

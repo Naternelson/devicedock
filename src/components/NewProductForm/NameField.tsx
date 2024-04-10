@@ -10,14 +10,14 @@ export const NameField = (props: TextFieldProps) => {
 	const errorMessage = errors.name?.message?.toString();
 	return (
 		<TextField
-			{...register('name')}
+			{...register('name', { required: 'Name is required' })}
 			label="Name"
 			multiline
-            size={"small"}
+			size={'small'}
 			fullWidth
 			error={Boolean(errorMessage)}
 			helperText={errorMessage}
-            {...props}
+			{...props}
 		/>
 	);
 };

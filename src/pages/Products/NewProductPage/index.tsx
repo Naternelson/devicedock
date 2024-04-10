@@ -1,12 +1,17 @@
-import { Box, Button, Collapse, Divider, IconButton, Stack, Tooltip, TooltipProps, Typography } from '@mui/material';
+import { Box, Button, Divider, IconButton, Stack, Typography } from '@mui/material';
 import {
 	AttributeNameField,
 	AttributeValueField,
 	CaseAutoGenField,
+	CaseIdentifierSchemaMaxSizeField,
 	CaseIdentifierSchemaNameField,
+	CaseIdentifierSchemaPatternField,
+	CaseSchemaScopeField,
+	CaseSchemaUniqueField,
 	DescriptionField,
 	NewProductForm,
 	ProductFormData,
+	SubmitButton,
 	UnitSchemaCountField,
 	UnitSchemaNameField,
 	UnitSchemaPatternField,
@@ -16,9 +21,8 @@ import {
 } from '../../../components/NewProductForm';
 import { NameField } from '../../../components/NewProductForm/NameField';
 import { Add, Delete } from '@mui/icons-material';
-import { PropsWithChildren, ReactNode, useEffect, useState } from 'react';
+import {useEffect } from 'react';
 import { useFieldArray } from 'react-hook-form';
-import { FormTooltip } from '../../../components/FormTooltip';
 import { useNavigate } from 'react-router-dom';
 
 export const NewProductPage = () => {
@@ -41,9 +45,7 @@ export const NewProductPage = () => {
 						<Button variant={'outlined'} onClick={() => nav(-1)}>
 							Cancel
 						</Button>
-						<Button variant={'contained'} type={'submit'}>
-							Create Product
-						</Button>
+						<SubmitButton/>
 					</Stack>
 				</Stack>
 			</NewProductForm>
@@ -113,9 +115,8 @@ const AttributesGroup = () => {
 };
 
 const CaseSchemaGroup = () => {
-	const [open, setOpen] = useState(false);
 	return (
-		<Stack gap={2} padding={'3rem'} sx={{ border: (theme) => `1px solid ${theme.palette.grey[300]}` }}>
+		<Stack gap={5} padding={'3rem'} sx={{ border: (theme) => `1px solid ${theme.palette.grey[300]}` }}>
 			<Stack direction={'row'} justifyContent={'space-between'} alignItems={'center'} gap={2}>
 				<Typography variant={'h6'}>Product Case Schema</Typography>
 			</Stack>
@@ -125,10 +126,24 @@ const CaseSchemaGroup = () => {
 				uniqueness, etc.
 			</Typography>
 			<Divider />
-			<Stack direction="column" gap={2}>
+			<Stack direction="column" gap={5}>
 				<CaseIdentifierSchemaNameField TextFieldProps={{ className: 'fadeup' }} />
-				<CaseAutoGenField />
-				<Collapse in={open}></Collapse>
+				<CaseIdentifierSchemaPatternField TextFieldProps={{ className: 'fadeup' }} />
+				<Stack direction={'row'} gap={3} alignItems="center" justifyContent={'space-between'}>
+					<CaseAutoGenField />
+					<Divider orientation={'vertical'} flexItem />
+					<Typography variant="caption" color={(theme) =>theme.palette.grey[900]}>
+						If true, the case ID will be automatically generated according to the pattern, otherwise the
+						user must provide the ID.
+					</Typography>
+				</Stack>
+
+				<Stack direction={'row'} gap={3} alignItems={'center'} justifyContent={'space-between'}>
+					<CaseSchemaUniqueField />
+					<Divider orientation={'vertical'} flexItem />
+					<CaseSchemaScopeField />
+				</Stack>
+				<CaseIdentifierSchemaMaxSizeField TextFieldProps={{ className: 'fadeup' }} />
 			</Stack>
 		</Stack>
 	);

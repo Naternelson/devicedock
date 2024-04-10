@@ -7,7 +7,9 @@ export const DescriptionField = (props: TextFieldProps) => {
     const errorMessage = errors.description?.message?.toString();
     return (
         <TextField
-            {...register('description')}
+            {...register('description', {
+                maxLength: {value: 255, message: 'Description is too long'},
+            })}
             label="Description"
             multiline
             size={"small"}

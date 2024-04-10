@@ -1,10 +1,11 @@
-import { FormProvider, UseFormReturn, useForm } from 'react-hook-form';
+import { FormProvider, UseFormReturn, useForm, useFormContext } from 'react-hook-form';
 import { Product, ProductType, productsCollection } from '../../types/Product';
-import { PropsWithChildren, useEffect } from 'react';
+import { PropsWithChildren } from 'react';
 import { LoaderOverlay } from '../LoaderOverlay';
 import { useOrgId } from '../../util';
 import { doc, getFirestore, writeBatch } from 'firebase/firestore';
 import { MachineSettings, machineSettingsCollection } from '../../types/MachineSettings';
+import { Button } from '@mui/material';
 
 export type ProductFormData = {
 	machine: string;
@@ -41,12 +42,12 @@ export const NewProductForm = ({ defaultValues, children }: PropsWithChildren<{ 
 				},
 			],
 			caseIdentifierSchema: {
-				name: '',
+				name: 'Case ID',
 				maxSize: 24,
-				pattern: '',
-				unique: false,
+				pattern: 'YYYYMMDD-###',
+				unique: true,
 				autoGen: true,
-				scope: 'organization',
+				scope: 'order',
 				labelTemplates: [],
 			},
 			...defaultValues,
@@ -110,3 +111,12 @@ const onSubmit = (orgId: string | null, frm: UseFormReturn<ProductFormData>) => 
 		console.error(error);
 	}
 };
+
+export const SubmitButton = ()=> {
+	const {formState: {errors, isSubmitting}, } = useFormContext<ProductFormData>();
+	const disabled = Object.keys(errors).length > 0 || isSubmitting;
+	
+	return <Button variant={"contained"} type={"submit"} disabled={disabled} >
+		Create Product
+	</Button>
+}

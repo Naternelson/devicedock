@@ -1,28 +1,61 @@
-import { Button, ButtonBase, ButtonBaseProps, ButtonProps, Checkbox, CheckboxProps, Dialog, DialogContent, DialogContentText, DialogTitle, FormControlLabel, FormGroup, IconButton, IconButtonProps, MenuItem, Select, SelectProps, TextField, TextFieldProps } from '@mui/material';
-import React, { PropsWithChildren } from 'react';
+import {
+	Box,
+	Checkbox,
+	CheckboxProps,
+	Dialog,
+	DialogContent,
+	DialogContentText,
+	DialogTitle,
+	Divider,
+	FormControlLabel,
+	FormGroup,
+	IconButton,
+	InputAdornment,
+	MenuItem,
+	Stack,
+	TextField,
+	TextFieldProps,
+	Typography,
+} from '@mui/material';
+import React from 'react';
 import { ProductFormData } from './form';
 import { Controller, useFieldArray, useFormContext } from 'react-hook-form';
+import { Info } from '@mui/icons-material';
 
 export const CaseIdentifierSchemaNameField = React.memo(({ TextFieldProps }: { TextFieldProps?: TextFieldProps }) => {
-	const { register } = useFormContext<ProductFormData>();
+	const {
+		register,
+		formState: { errors },
+	} = useFormContext<ProductFormData>();
+	const errorMessage = errors.caseIdentifierSchema?.name?.message?.toString();
 	return (
 		<TextField
 			{...TextFieldProps}
-			{...register('caseIdentifierSchema.name')}
-			label="Case Identifier Schema Name"
+			{...register('caseIdentifierSchema.name', { required: 'Case Identifier Name is required' })}
+			label="Case ID Alias"
 			fullWidth
+			size={'small'}
+			error={Boolean(errorMessage)}
+			helperText={errorMessage}
 		/>
 	);
 });
 export const CaseIdentifierSchemaMaxSizeField = React.memo(
 	({ TextFieldProps }: { TextFieldProps?: TextFieldProps }) => {
-		const { register } = useFormContext<ProductFormData>();
+		const {
+			register,
+			formState: { errors },
+		} = useFormContext<ProductFormData>();
+		const errorMessage = errors.caseIdentifierSchema?.maxSize?.message?.toString();
 		return (
 			<TextField
 				{...TextFieldProps}
-				{...register('caseIdentifierSchema.maxSize', { valueAsNumber: true })}
-				label="Case Identifier Schema Max Size"
+				{...register('caseIdentifierSchema.maxSize', { valueAsNumber: true, min: 1 })}
+				label="Case Max Size (Units)"
 				fullWidth
+				size={'small'}
+				error={Boolean(errorMessage)}
+				helperText={errorMessage}
 			/>
 		);
 	},
@@ -30,224 +63,165 @@ export const CaseIdentifierSchemaMaxSizeField = React.memo(
 
 export const CaseIdentifierSchemaPatternField = React.memo(
 	({ TextFieldProps }: { TextFieldProps?: TextFieldProps }) => {
-        const [open, setOpen] = React.useState(false);
-        const toggleOpen = () => setOpen((o) => !o);
+		const [open, setOpen] = React.useState(false);
+		const toggleOpen = () => setOpen((o) => !o);
 		const { register } = useFormContext<ProductFormData>();
 		return (
 			<>
 				<Dialog open={open} onClose={toggleOpen}>
-					<DialogTitle>Custom Pattern</DialogTitle>
+					<DialogTitle>Custom Format</DialogTitle>
 					<DialogContent>
-						<DialogContentText>
-							Describe how the format of the case Identifier should be. The format can look like the following: 
-						</DialogContentText>
-						<DialogContentText>YYYYMMDD-###</DialogContentText>
-                        <DialogContentText>Where YYYY is the year, MM is the month, DD is the day, and ### is a number that increments.</DialogContentText>
-                        <DialogContentText>Use the following characters to describe the format:</DialogContentText>
-                        <DialogContentText>Y: Year</DialogContentText>
-                        <DialogContentText>M: Month</DialogContentText>
-                        <DialogContentText>D: Day</DialogContentText>
-                        <DialogContentText>#: Number</DialogContentText>
-                        <DialogContentText>Any other characters will be treated as literals.</DialogContentText>
+						<Stack gap={2}>
+							<DialogContentText>
+								Describe how the format of the Case ID should be. The format can look like the
+								following:
+							</DialogContentText>
+							<DialogContentText>
+								<Typography textAlign={'center'}>
+									<strong>YYYYMMDD-###</strong>
+								</Typography>
+							</DialogContentText>
+							<DialogContentText>
+								Where <strong>YYYY</strong> is the year, <strong>MM</strong> is the month,{' '}
+								<strong>DD</strong> is the day, and <strong>###</strong> is a number that increments.
+							</DialogContentText>
+							<Divider />
+							<DialogContentText>Use the following characters to describe the format:</DialogContentText>
+							<Box padding={'1rem'}>
+								<DialogContentText>Y: Year</DialogContentText>
+								<DialogContentText>M: Month</DialogContentText>
+								<DialogContentText>D: Day</DialogContentText>
+								<DialogContentText>#: Number</DialogContentText>
+								<DialogContentText>Any other characters will be treated as literals.</DialogContentText>
+							</Box>
+						</Stack>
 					</DialogContent>
 				</Dialog>
 				<TextField
 					{...TextFieldProps}
 					{...register('caseIdentifierSchema.pattern')}
-					label="Case Identifier Format"
+					label="Case ID Format"
 					fullWidth
+					size={'small'}
+					InputProps={{
+						endAdornment: (
+							<InputAdornment position="end">
+								<IconButton onClick={toggleOpen}>
+									<Info fontSize={'small'} />
+								</IconButton>
+							</InputAdornment>
+						),
+					}}
 				/>
 			</>
 		);
 	},
 );
 
+export const CaseSchemaUniqueField = React.memo(({ CheckboxProps }: { CheckboxProps?: CheckboxProps }) => {
+	const { control } = useFormContext<ProductFormData>();
+	return (
+		<Controller
+			name={`caseIdentifierSchema.unique`}
+			control={control}
+			render={({ field }) => (
+				<FormGroup>
+					<FormControlLabel control={<Checkbox {...field} checked={field.value} {...CheckboxProps} />} label="Unique" />
+				</FormGroup>
+			)}
+		/>
+	);
+});
 
-export const CaseSchemaUniqueField = React.memo(
-	({CheckboxProps }: { index: number; CheckboxProps?: CheckboxProps }) => {
+export const CaseAutoGenField = React.memo(({ CheckboxProps }: { CheckboxProps?: CheckboxProps }) => {
+	const { control } = useFormContext<ProductFormData>();
+	return (
+		<Controller
+			name={`caseIdentifierSchema.autoGen`}
+			control={control}
+			render={({ field }) => (
+				<FormGroup>
+					<FormControlLabel
+						control={<Checkbox {...field} checked={field.value} {...CheckboxProps} />}
+						label="Auto Generate"
+					/>
+				</FormGroup>
+			)}
+		/>
+	);
+});
+
+export const CaseSchemaScopeField = React.memo(({ TextFieldProps }: { TextFieldProps?: TextFieldProps }) => {
+	const { control, watch } = useFormContext<ProductFormData>();
+	const isUnique = watch('caseIdentifierSchema.unique');
+	return (
+		<Controller
+			disabled={!isUnique}
+			name={`caseIdentifierSchema.scope`}
+			control={control}
+			rules={{
+				required: 'Scope is required',
+				validate: (value) => ['order', 'organization'].includes(value),
+			}}
+			render={({ field }) => (
+				<TextField {...field} select label="Scope" size={'small'} fullWidth {...TextFieldProps}>
+					<MenuItem value="order">Order</MenuItem>
+					<MenuItem value="organization">Organization</MenuItem>
+				</TextField>
+			)}
+		/>
+	);
+});
+
+export const useCaseLabelTemplatesField = () => {
+	const { control } = useFormContext<ProductFormData>();
+	return useFieldArray({
+		control,
+		name: 'caseIdentifierSchema.labelTemplates',
+	});
+};
+
+export const CaseTemplateDefaultPrinterField = React.memo(
+	({ index, TextFieldProps }: { index: number; TextFieldProps?: TextFieldProps }) => {
+		const { register } = useFormContext<ProductFormData>();
+		return (
+			<TextField
+				{...TextFieldProps}
+				{...register(`caseIdentifierSchema.labelTemplates.${index}.defaultPrinter`)}
+				label="Default Printer"
+				fullWidth
+			/>
+		);
+	},
+);
+
+export const CaseTemplateTemplateField = React.memo(
+	({ index, TextFieldProps }: { index: number; TextFieldProps?: TextFieldProps }) => {
+		const { register } = useFormContext<ProductFormData>();
+		return (
+			<TextField
+				{...TextFieldProps}
+				{...register(`caseIdentifierSchema.labelTemplates.${index}.template`)}
+				label="Template"
+				fullWidth
+			/>
+		);
+	},
+);
+
+export const CaseTemplateAutoPrintField = React.memo(
+	({ index, CheckboxProps }: { index: number; CheckboxProps?: CheckboxProps }) => {
 		const { control } = useFormContext<ProductFormData>();
 		return (
 			<Controller
-				name={`caseIdentifierSchema.unique`}
+				name={`caseIdentifierSchema.labelTemplates.${index}.autoPrint`}
 				control={control}
 				render={({ field }) => (
 					<FormGroup>
-						<FormControlLabel control={<Checkbox {...field} {...CheckboxProps} />} label="Unique" />
+						<FormControlLabel control={<Checkbox {...field} {...CheckboxProps} />} label="Auto Print" />
 					</FormGroup>
 				)}
 			/>
 		);
 	},
-);
-
-export const CaseAutoGenField = React.memo(
-    ({ CheckboxProps }: { CheckboxProps?: CheckboxProps }) => {
-        const { control } = useFormContext<ProductFormData>();
-        return (
-            <Controller
-                name={`caseIdentifierSchema.autoGen`}
-                control={control}
-                render={({ field }) => (
-                    <FormGroup>
-                        <FormControlLabel control={<Checkbox {...field} {...CheckboxProps} />} label="Auto Generate" />
-                    </FormGroup>
-                )}
-            />
-        );
-    },
-);
-
-export const CaseSchemaScopeField = React.memo(
-	({ SelectFieldProps }: { index: number; SelectFieldProps?: SelectProps }) => {
-		const { control } = useFormContext<ProductFormData>();
-		return (
-			<Controller
-				name={`caseIdentifierSchema.scope`}
-				control={control}
-				render={({ field }) => (
-					<Select {...field} label="Scope" fullWidth {...SelectFieldProps}>
-						<MenuItem value="order">Order</MenuItem>
-						<MenuItem value="organization">Organization</MenuItem>
-					</Select>
-				)}
-			/>
-		);
-	},
-);
-
-export const useCaseLabelTemplatesField = () => {
-    const {control} = useFormContext<ProductFormData>();
-    return useFieldArray({
-        control,
-        name: 'caseIdentifierSchema.labelTemplates',
-    });
-};
-
-export const AddCaseSchemaTemplateButton = React.memo(
-    ({
-        index,
-        variant = 'button',
-        ButtonProps,
-        ButtonBaseProps,
-        IconButtonProps,
-        children,
-    }: PropsWithChildren<{
-        index: number;
-        variant: 'button' | 'button-base' | 'icon-button';
-        ButtonProps?: ButtonProps;
-        ButtonBaseProps?: ButtonBaseProps;
-        IconButtonProps?: IconButtonProps;
-    }>) => {
-        const { append } = useCaseLabelTemplatesField();
-        const onClick = () =>
-            append({
-                defaultPrinter: '',
-                template: '',
-                autoPrint: true,
-            });
-        switch (variant) {
-            case 'button':
-                return (
-                    <Button onClick={onClick} {...ButtonProps}>
-                        {children}
-                    </Button>
-                );
-            case 'button-base':
-                return (
-                    <ButtonBase onClick={onClick} {...ButtonBaseProps}>
-                        {children}
-                    </ButtonBase>
-                );
-            case 'icon-button':
-                return (
-                    <IconButton onClick={onClick} {...IconButtonProps}>
-                        {children}
-                    </IconButton>
-                );
-        }
-    },
-);
-export const RemoveCaseSchemaTemplateButton = React.memo(
-    ({
-        index,
-        variant = 'button',
-        ButtonProps,
-        ButtonBaseProps,
-        IconButtonProps,
-        children,
-    }: PropsWithChildren<{
-        index: number;
-        variant: 'button' | 'button-base' | 'icon-button';
-        ButtonProps?: ButtonProps;
-        ButtonBaseProps?: ButtonBaseProps;
-        IconButtonProps?: IconButtonProps;
-    }>) => {
-        const { remove } = useCaseLabelTemplatesField();
-        const onClick = () => remove(index);
-        switch (variant) {
-            case 'button':
-                return (
-                    <Button onClick={onClick} {...ButtonProps}>
-                        {children}
-                    </Button>
-                );
-            case 'button-base':
-                return (
-                    <ButtonBase onClick={onClick} {...ButtonBaseProps}>
-                        {children}
-                    </ButtonBase>
-                );
-            case 'icon-button':
-                return (
-                    <IconButton onClick={onClick} {...IconButtonProps}>
-                        {children}
-                    </IconButton>
-                );
-        }
-    },
-);
-
-export const CaseTemplateDefaultPrinterField = React.memo(
-    ({ index, TextFieldProps }: { index: number; TextFieldProps?: TextFieldProps }) => {
-        const { register } = useFormContext<ProductFormData>();
-        return (
-            <TextField
-                {...TextFieldProps}
-                {...register(`caseIdentifierSchema.labelTemplates.${index}.defaultPrinter`)}
-                label="Default Printer"
-                fullWidth
-            />
-        );
-    },
-);
-
-export const CaseTemplateTemplateField = React.memo(
-    ({ index, TextFieldProps }: { index: number; TextFieldProps?: TextFieldProps }) => {
-        const { register } = useFormContext<ProductFormData>();
-        return (
-            <TextField
-                {...TextFieldProps}
-                {...register(`caseIdentifierSchema.labelTemplates.${index}.template`)}
-                label="Template"
-                fullWidth
-            />
-        );
-    },
-);
-
-export const CaseTemplateAutoPrintField = React.memo(
-    ({ index, CheckboxProps }: { index: number; CheckboxProps?: CheckboxProps }) => {
-        const { control } = useFormContext<ProductFormData>();
-        return (
-            <Controller
-                name={`caseIdentifierSchema.labelTemplates.${index}.autoPrint`}
-                control={control}
-                render={({ field }) => (
-                    <FormGroup>
-                        <FormControlLabel control={<Checkbox {...field} {...CheckboxProps} />} label="Auto Print" />
-                    </FormGroup>
-                )}
-            />
-        );
-    },
 );

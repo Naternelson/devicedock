@@ -1,38 +1,22 @@
 import { Category, Home, StickyNote2 } from '@mui/icons-material';
-import {
-	Box,
-	Button,
-	ButtonBase,
-	ClickAwayListener,
-	Collapse,
-	Divider,
-	IconButton,
-	MenuItem,
-	MenuList,
-	Stack,
-	Typography,
-} from '@mui/material';
+import { Box, ClickAwayListener, Collapse, MenuItem, MenuList, Stack, Typography } from '@mui/material';
 import { getAuth, onAuthStateChanged } from 'firebase/auth';
 import { PropsWithChildren, useEffect, useRef, useState } from 'react';
 import { Outlet, useLocation, useNavigate } from 'react-router-dom';
 
 export const DashboardLayout = () => {
 	const nav = useNavigate();
-	useEffect(()=>{
+	useEffect(() => {
 		onAuthStateChanged(getAuth(), (user) => {
 			if (!user) {
-				nav("/login");
+				nav('/login');
 			}
 		});
-	},[])
+	}, [nav]);
 	return (
-		<Box
-			display={'flex'}
-			flexDirection={'row'}
-			flex={1}
-			sx={{ boxSizing: 'border-box', padding: { xs: 'none', sm: '1rem' } }}>
+		<Box display={'flex'} flexDirection={'row'} flex={1} sx={{ boxSizing: 'border-box' }}>
 			<SideNav />
-			<Box flex={1} display={"flex"} height={"100%"} sx={{overflow: "auto"}}>
+			<Box flex={1} display={'flex'} height={'calc(100vh - 1.75rem)'} padding={'1rem'} sx={{ overflow: 'auto' }}>
 				<Outlet />
 			</Box>
 		</Box>
@@ -43,7 +27,6 @@ const SideNav = () => {
 	const location = useLocation();
 	const [open, setOpen] = useState(false);
 	const ref = useRef<HTMLDivElement>(null);
-
 
 	useEffect(() => {
 		if (!ref.current) return;
@@ -68,10 +51,15 @@ const SideNav = () => {
 				in={open}
 				collapsedSize={'40px'}
 				orientation="horizontal"
-				sx={{ borderRadius: {xs: "none", sm: "5px"},zIndex: 1000, boxShadow: (theme) => theme.shadows[5] }}>
+				sx={{
+					margin: '1rem',
+					borderRadius: { xs: 'none', sm: '5px' },
+					zIndex: 1000,
+					boxShadow: (theme) => theme.shadows[5],
+				}}>
 				<Stack
 					sx={{
-						borderRadius: {xs: "none", sm: "5px"},
+						borderRadius: { xs: 'none', sm: '5px' },
 						height: '100%',
 						minWidth: '40px',
 						backgroundColor: (theme) => theme.palette.primary.main,
@@ -82,11 +70,11 @@ const SideNav = () => {
 							<Home />
 						</NavItem>
 
-						<NavItem to={'/dashboard/orders'} label={'Orders'} selected={targetSegment === "orders"}>
+						<NavItem to={'/dashboard/orders'} label={'Orders'} selected={targetSegment === 'orders'}>
 							<StickyNote2 />
 						</NavItem>
 
-						<NavItem to={'/dashboard/products'} label={'Products'} selected={targetSegment === "products"}>
+						<NavItem to={'/dashboard/products'} label={'Products'} selected={targetSegment === 'products'}>
 							<Category />
 						</NavItem>
 					</MenuList>

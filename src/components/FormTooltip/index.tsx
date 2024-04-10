@@ -1,5 +1,5 @@
 import { Box, BoxProps, styled } from '@mui/material';
-import { PropsWithChildren, ReactElement, ReactNode, useEffect, useRef, useState } from 'react';
+import { PropsWithChildren, ReactNode, useEffect, useRef, useState } from 'react';
 
 export const FormTooltip = (props: PropsWithChildren<{ message: ReactNode; open?: boolean }>) => {
 	const [state, setState] = useState<boolean>(false);
