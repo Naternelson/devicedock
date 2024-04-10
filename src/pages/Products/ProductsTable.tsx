@@ -1,7 +1,7 @@
-import { Box, Checkbox, IconButton, Stack } from '@mui/material';
+import { Checkbox, IconButton, Stack } from '@mui/material';
 import { useEffect, useState } from 'react';
 import { useOrgId } from '../../util';
-import { doc, onSnapshot, orderBy, query } from 'firebase/firestore';
+import { doc, onSnapshot } from 'firebase/firestore';
 import { Product, productsCollection } from '../../types/Product';
 import { Delete, Edit } from '@mui/icons-material';
 import { FixedSizeList as List } from 'react-window';

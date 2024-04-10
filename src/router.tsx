@@ -11,8 +11,8 @@ import {
 	ProductsPage,
 	SignupPage,
 	TermsPage,
-	NewProductForm,
 	ProductsIndexPage,
+	NewProductPage,
 } from './pages';
 import { collection, getDocs, getFirestore, limit, query, where } from 'firebase/firestore';
 import { getAuth } from 'firebase/auth';
@@ -90,13 +90,16 @@ export default createBrowserRouter([
 					{
 						path: 'products',
 						element: <ProductsPage />,
-						children: [{
-							index:true, 
-							element: <ProductsIndexPage/>
-						},{
-							path: "new",
-							element: <NewProductForm/>
-						}]
+						children: [
+							{
+								index: true,
+								element: <ProductsIndexPage />,
+							},
+							{
+								path: 'new',
+								element: <NewProductPage />,
+							},
+						],
 					},
 					{
 						path: 'orders',

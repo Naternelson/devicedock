@@ -1,12 +1,51 @@
-import { Box, Button, Collapse, Divider, Paper, Stack, Typography } from '@mui/material';
-import { useEffect, useRef, useState } from 'react';
+import { Box, Breadcrumbs, Button, Collapse, Divider, Link, Paper, Stack, Typography } from '@mui/material';
+import React, { useEffect, useRef, useState } from 'react';
 import { useOrgId } from '../../util';
 import { onSnapshot, orderBy, query } from 'firebase/firestore';
 import { productsCollection } from '../../types/Product';
 import { ProductsTable } from './ProductsTable';
-import { Outlet, useNavigate } from 'react-router-dom';
+import { Link as NavLink, Outlet, useLocation, useNavigate } from 'react-router-dom';
 
-export const ProductsPage = () => <Outlet/>;
+export const ProductsPage = () => {
+	return (
+		<Box display="flex" flex={1} flexDirection={'column'}>
+			<ProductsBreadcrumbs />
+			<Box display="flex" flex={1}>
+				<Outlet />
+			</Box>
+		</Box>
+	);
+};
+
+const ProductsBreadcrumbs = () => {
+	const location = useLocation();
+	const parts = location.pathname.split('/').slice(1);
+	// Remove any search params
+	if (parts.length === 1) return null;
+	return (
+		<Breadcrumbs>
+			{parts.map((part, i, arr) => {
+				if (i === arr.length - 1) return <Typography key={i} fontWeight={600}>{titleCase(part)}</Typography>;
+				else
+					return (
+						<BreadcrumbLink key={i} to={'/' + parts.slice(0, i + 1).join('/')}>{titleCase(part)}</BreadcrumbLink>
+					);
+			})}
+		</Breadcrumbs>
+	);
+};
+
+const BreadcrumbLink = ({ to, children }: { to: string; children: React.ReactNode }) => {
+	return (
+		<Link component={NavLink} to={to}>
+			{children}
+		</Link>
+	);
+};
+
+const titleCase = (str: string) => {
+	return str.replace(/\b\w/g, (l) => l.toUpperCase());
+};
 
 const NoProductsOverlay = () => {
 	const nav = useNavigate();
@@ -32,6 +71,7 @@ const NoProductsOverlay = () => {
 				alignItems: 'center',
 				height: '100%',
 				width: '100%',
+				outline: '1px solid red',
 			}}>
 			<Stack direction="column" alignItems="center" gap={3}>
 				<Stack direction={'column'} alignItems={'center'} width="100%">
@@ -81,4 +121,4 @@ export const ProductsIndexPage = () => {
 	);
 };
 
-export * from './NewProductForm';
+export * from './NewProductPage';

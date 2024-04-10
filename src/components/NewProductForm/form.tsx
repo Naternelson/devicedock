@@ -1,9 +1,9 @@
 import { FormProvider, UseFormReturn, useForm } from 'react-hook-form';
 import { Product, ProductType, productsCollection } from '../../types/Product';
-import { PropsWithChildren } from 'react';
+import { PropsWithChildren, useEffect } from 'react';
 import { LoaderOverlay } from '../LoaderOverlay';
 import { useOrgId } from '../../util';
-import {  doc, getFirestore, writeBatch } from 'firebase/firestore';
+import { doc, getFirestore, writeBatch } from 'firebase/firestore';
 import { MachineSettings, machineSettingsCollection } from '../../types/MachineSettings';
 
 export type ProductFormData = {
@@ -34,8 +34,9 @@ export const NewProductForm = ({ defaultValues, children }: PropsWithChildren<{ 
 					name: '',
 					count: 1,
 					pattern: '',
-					unique: false,
-					scope: 'order',
+					unique: true,
+					transform: 'NONE',
+					scope: 'organization',
 					labelTemplates: [],
 				},
 			],
@@ -45,12 +46,13 @@ export const NewProductForm = ({ defaultValues, children }: PropsWithChildren<{ 
 				pattern: '',
 				unique: false,
 				autoGen: true,
-				scope: 'order',
+				scope: 'organization',
 				labelTemplates: [],
 			},
 			...defaultValues,
 		},
 	});
+
 	return (
 		<FormProvider {...frm}>
 			<form onSubmit={frm.handleSubmit(onSubmit(orgId, frm))}>
@@ -108,5 +110,3 @@ const onSubmit = (orgId: string | null, frm: UseFormReturn<ProductFormData>) => 
 		console.error(error);
 	}
 };
-
-		

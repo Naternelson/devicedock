@@ -12,25 +12,42 @@ import {
 	Stack,
 	Typography,
 } from '@mui/material';
+import { getAuth, onAuthStateChanged } from 'firebase/auth';
 import { PropsWithChildren, useEffect, useRef, useState } from 'react';
-import { Outlet, useNavigate } from 'react-router-dom';
+import { Outlet, useLocation, useNavigate } from 'react-router-dom';
 
 export const DashboardLayout = () => {
+	const nav = useNavigate();
+	useEffect(()=>{
+		onAuthStateChanged(getAuth(), (user) => {
+			if (!user) {
+				nav("/login");
+			}
+		});
+	},[])
 	return (
-		<Box display={'flex'} flexDirection={'row'} flex={1} height={'100%'} sx={{ padding: {xs: "none", sm: "1rem"} }}>
+		<Box
+			display={'flex'}
+			flexDirection={'row'}
+			flex={1}
+			sx={{ boxSizing: 'border-box', padding: { xs: 'none', sm: '1rem' } }}>
 			<SideNav />
-			<Outlet />
+			<Box flex={1} display={"flex"} height={"100%"} sx={{overflow: "auto"}}>
+				<Outlet />
+			</Box>
 		</Box>
 	);
 };
 
 const SideNav = () => {
+	const location = useLocation();
 	const [open, setOpen] = useState(false);
 	const ref = useRef<HTMLDivElement>(null);
+
+
 	useEffect(() => {
 		if (!ref.current) return;
 		const el = ref.current;
-		// On hover over set to open, on mouse leave set to close. If focus is inside, keep open.
 		const onMouseEnter = () => setOpen(true);
 		const onMouseLeave = () => setOpen(false);
 		el.addEventListener('mouseenter', onMouseEnter);
@@ -42,6 +59,8 @@ const SideNav = () => {
 			el?.removeEventListener('mouseleave', onMouseLeave);
 		};
 	}, [ref]);
+	const targetSegment = location.pathname.split('/')[2];
+	const atDashboard = location.pathname === '/dashboard';
 	return (
 		<ClickAwayListener onClickAway={() => setOpen(false)}>
 			<Collapse
@@ -59,15 +78,15 @@ const SideNav = () => {
 						color: (theme) => theme.palette.primary.contrastText,
 					}}>
 					<MenuList disablePadding sx={{ padding: 0, margin: 0 }}>
-						<NavItem to={'/dashboard'} label={'Home'} selected={true}>
+						<NavItem to={'/dashboard'} label={'Home'} selected={atDashboard}>
 							<Home />
 						</NavItem>
 
-						<NavItem to={'/dashboard/orders'} label={'Orders'} selected={false}>
+						<NavItem to={'/dashboard/orders'} label={'Orders'} selected={targetSegment === "orders"}>
 							<StickyNote2 />
 						</NavItem>
 
-						<NavItem to={'/dashboard/products'} label={'Products'} selected={false}>
+						<NavItem to={'/dashboard/products'} label={'Products'} selected={targetSegment === "products"}>
 							<Category />
 						</NavItem>
 					</MenuList>

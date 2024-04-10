@@ -31,11 +31,11 @@ export const LoginPage = () => {
 		try {
 			await startDb();
 			const res = await signInWithEmailAndPassword(getAuth(), data.email, data.password);
+			nav('/dashboard');
 			console.log(res);
 		} catch (error) {
-			console.error({error});
+			console.error({ error });
 		}
-		
 	};
 	return (
 		<Box maxWidth={'500px'} margin={'auto'}>
@@ -106,7 +106,7 @@ const PasswordField = () => {
 					endAdornment: (
 						<InputAdornment position="end">
 							<IconButton onClick={() => setShowPassword(!showPassword)}>
-								{showPassword ? <VisibilityOff /> :  <Visibility /> }
+								{showPassword ? <VisibilityOff /> : <Visibility />}
 							</IconButton>
 						</InputAdornment>
 					),
@@ -116,7 +116,7 @@ const PasswordField = () => {
 					minLength: {
 						value: 6,
 						message: 'Password must be at least 6 characters long',
-					}
+					},
 				})}
 			/>
 		</ClickAwayListener>

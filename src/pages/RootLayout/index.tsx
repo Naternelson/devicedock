@@ -4,10 +4,12 @@ import './index.css';
 import { useAuthState } from 'react-firebase-hooks/auth';
 import { getAuth, signOut } from 'firebase/auth';
 import "../../styles"
+import { useDOMListeners } from '../../styles';
 
 export const RootLayout = () => {
+	const ref = useDOMListeners();
 	return (
-		<Box >
+		<Box ref={ref} >
 			<Box
 				sx={{
 					backgroundColor: 'background.default',
@@ -15,8 +17,11 @@ export const RootLayout = () => {
 					flex: 1,
 					display: 'flex',
 					flexDirection: 'column',
+					boxSizing: 'border-box',
+					overflow: 'auto',
 				}}>
 				<NavBar />
+				<FauxNav />
 				<Outlet />
 			</Box>
 			{/* <FooterBar /> */}
@@ -46,9 +51,14 @@ const StyledNav = styled('nav')(({ theme }) => ({
 	backgroundColor: theme.palette.primary.main,
 	color: theme.palette.primary.contrastText,
 	width: '100%',
+	height: '1.75rem',
+	display: 'flex',
+	justifyContent: 'center',
+	alignItems: 'center',
 	padding: '0 1rem',
     boxShadow: theme.shadows[2],
 	zIndex: 1000,
+	position: "fixed",
 	ul: {
 		listStyle: 'none',
 		display: 'flex',
@@ -58,21 +68,27 @@ const StyledNav = styled('nav')(({ theme }) => ({
 		margin: 0,
 	},
 }));
+const FauxNav = styled("div")(() => {
+	return {
+		minHeight: "1.75rem",
+		width: "100%",
+	}
+})
 
-const FooterBar = () => {
-    return (
-        <StyledFooter>
-            <p>&copy; 2021 My Company</p>
-        </StyledFooter>
-    );
-}
+// const FooterBar = () => {
+//     return (
+//         <StyledFooter>
+//             <p>&copy; 2021 My Company</p>
+//         </StyledFooter>
+//     );
+// }
 
-const StyledFooter = styled('footer')(({ theme }) => ({
-    backgroundColor: theme.palette.primary.dark,
-    color: theme.palette.primary.contrastText,
+// const StyledFooter = styled('footer')(({ theme }) => ({
+//     backgroundColor: theme.palette.primary.dark,
+//     color: theme.palette.primary.contrastText,
     
-    width: '100%',
-    padding: '1rem',
-    textAlign: 'center',
-    boxSizing: 'border-box',
-}));
+//     width: '100%',
+//     padding: '1rem',
+//     textAlign: 'center',
+//     boxSizing: 'border-box',
+// }));
