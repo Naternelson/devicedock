@@ -12,7 +12,7 @@ export const useDOMListeners = () => {
                 if(mutation.type === 'childList') {
                     el.querySelectorAll(".delaygroup").forEach((element, i) => { // Changed variable name from 'el' to 'element'
                         element.querySelectorAll(".fadeup").forEach((el, i) => {
-                            el.setAttribute("style", `animation-delay: ${i * 0.1}s`);
+                            el.setAttribute("style", `animation-delay: ${i * 0.05}s`);
                         });
                     });
                 }

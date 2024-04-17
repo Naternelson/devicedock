@@ -1,16 +1,16 @@
-import { Box, Breadcrumbs, Button, Collapse, Divider, Link,  Stack, Typography } from '@mui/material';
+import { Box, Breadcrumbs, Button, Collapse, Divider, Link, Stack, Typography } from '@mui/material';
 import React, { useEffect, useRef, useState } from 'react';
 import { useOrgId } from '../../util';
 import { onSnapshot, orderBy, query } from 'firebase/firestore';
-import { productsCollection } from '../../types/Product';
-import { ProductsTable } from './ProductsTable';
+import { Product, productsCollection } from '../../types/Product';
+import { ProductsTable } from './Table/ProductsTable';
 import { Link as NavLink, Outlet, useLocation, useNavigate } from 'react-router-dom';
 
 export const ProductsPage = () => {
 	return (
 		<Box display="flex" flex={1} flexDirection={'column'}>
 			<ProductsBreadcrumbs />
-			<Box display="flex" flex={1} padding={"3rem"} paddingTop={0}>
+			<Box display="flex" flex={1}>
 				<Outlet />
 			</Box>
 		</Box>
@@ -25,10 +25,17 @@ const ProductsBreadcrumbs = () => {
 	return (
 		<Breadcrumbs>
 			{parts.map((part, i, arr) => {
-				if (i === arr.length - 1) return <Typography key={i} fontWeight={600}>{titleCase(part)}</Typography>;
+				if (i === arr.length - 1)
+					return (
+						<Typography key={i} fontWeight={600}>
+							{titleCase(part)}
+						</Typography>
+					);
 				else
 					return (
-						<BreadcrumbLink key={i} to={'/' + parts.slice(0, i + 1).join('/')}>{titleCase(part)}</BreadcrumbLink>
+						<BreadcrumbLink key={i} to={'/' + parts.slice(0, i + 1).join('/')}>
+							{titleCase(part)}
+						</BreadcrumbLink>
 					);
 			})}
 		</Breadcrumbs>
@@ -99,25 +106,52 @@ const NoProductsOverlay = () => {
 };
 
 export const ProductsIndexPage = () => {
+	const ref = useRef<HTMLDivElement>(null);
 	const orgId = useOrgId();
-	const [productIds, setProductIds] = useState<string[]>([]);
+	const [products, setProducts] = useState<{id: string, product: Product}[]>([]);
 	const [targetProductId, setTargetProductId] = useState<string | null>(null);
 	useEffect(() => {
 		if (!orgId) return;
 		const q = query(productsCollection(orgId), orderBy('name'));
 		return onSnapshot(q, (snap) => {
-			setProductIds(snap.docs.map((d) => d.id));
+			const products: {id: string, product: Product}[] = [];
+			for(let i =0; i < 1000; i++){
+				snap.docs.forEach((doc) => (products.push({ id: doc.id, product: doc.data() as Product })));
+			}
+			setProducts(products);
 		});
 	}, [orgId]);
 	const handleProductTarget = (id: string) => {
 		setTargetProductId(id);
 	};
-	if (productIds.length === 0) return <NoProductsOverlay />;
+	const tableHeight = useResize(ref, products.length);
+	if (products.length === 0) return <NoProductsOverlay />;
 	return (
-		<Box>
-			<ProductsTable handleProductTarget={handleProductTarget} productIds={productIds} />
+		<Box ref={ref} >
+			<ProductsTable
+				targetProduct={targetProductId  || ''}
+				handleProductTarget={handleProductTarget}
+				products={products}
+				height={tableHeight}
+				width={300}
+			/>
 		</Box>
 	);
 };
+
+const useResize = (ref: React.RefObject<HTMLElement>, length: number) => {
+	const [height, setHeight] = useState(0);
+	useEffect(() => {
+		if (!ref.current) return;
+		const el = ref.current;
+		setHeight(el.offsetHeight);
+		const onResize = () => {
+			setHeight(el.offsetHeight);
+		};
+		window.addEventListener('resize', onResize);
+		return () => window.removeEventListener('resize', onResize);
+	}, [ref, length]);
+	return height;
+}
 
 export * from './NewProductPage';

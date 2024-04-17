@@ -2,8 +2,10 @@ import { Controller, useFieldArray, useFormContext } from 'react-hook-form';
 import { ProductFormData } from './form';
 import {
 	Autocomplete,
+	Box,
 	Checkbox,
 	CheckboxProps,
+	ClickAwayListener,
 	Dialog,
 	DialogContent,
 	DialogContentText,
@@ -61,7 +63,7 @@ export const UnitSchemaNameField = React.memo(
 		});
 		return (
 			<Autocomplete
-				onChange={(e, value) => setValue(`unitIdentifierSchema.${index}.name`, value ||'')}
+				onChange={(e, value) => setValue(`unitIdentifierSchema.${index}.name`, value || '')}
 				freeSolo
 				fullWidth
 				openOnFocus
@@ -106,6 +108,7 @@ export const UnitSchemaCountField = React.memo(
 
 export const UnitSchemaPatternField = React.memo(
 	({ index, TextFieldProps }: { index: number; TextFieldProps?: TextFieldProps }) => {
+		const [hasFocus, setHasFocus] = React.useState(false);
 		const {
 			register,
 			formState: { errors },
@@ -131,25 +134,33 @@ export const UnitSchemaPatternField = React.memo(
 						</DialogContentText>
 					</DialogContent>
 				</Dialog>
-				<TextField
-					{...register(`unitIdentifierSchema.${index}.pattern`, {
-						maxLength: { value: 1000, message: 'Pattern is too long' },
-					})}
-					label="Pattern"
-					multiline
-					size="small"
-					fullWidth
-					error={Boolean(errorMessage)}
-					helperText={errorMessage}
-					InputProps={{
-						endAdornment: (
-							<IconButton disableRipple onClick={toggleOpen}>
-								<Info fontSize="small" />
-							</IconButton>
-						),
-					}}
-					{...TextFieldProps}
-				/>
+				<ClickAwayListener onClickAway={() => setHasFocus(false)}>
+					<Box onFocus={() => setHasFocus(true)}>
+						<TextField
+							{...register(`unitIdentifierSchema.${index}.pattern`, {
+								maxLength: { value: 1000, message: 'Pattern is too long' },
+							})}
+							label="Pattern"
+							multiline
+							size="small"
+							fullWidth
+							error={Boolean(errorMessage)}
+							helperText={errorMessage}
+							InputProps={{
+								endAdornment: (
+									<IconButton disableRipple onClick={toggleOpen}>
+										<Info
+											sx={{ transition: 'all 300ms ease' }}
+											color={hasFocus === true ? 'secondary' : 'inherit'}
+											fontSize={'small'}
+										/>
+									</IconButton>
+								),
+							}}
+							{...TextFieldProps}
+						/>
+					</Box>
+				</ClickAwayListener>
 			</>
 		);
 	},

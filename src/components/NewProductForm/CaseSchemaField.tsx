@@ -9,6 +9,7 @@ import {
 	Divider,
 	FormControlLabel,
 	FormGroup,
+	FormGroupProps,
 	IconButton,
 	InputAdornment,
 	MenuItem,
@@ -63,6 +64,7 @@ export const CaseIdentifierSchemaMaxSizeField = React.memo(
 
 export const CaseIdentifierSchemaPatternField = React.memo(
 	({ TextFieldProps }: { TextFieldProps?: TextFieldProps }) => {
+		const [hasFocus, setHasFocus] = React.useState(false);
 		const [open, setOpen] = React.useState(false);
 		const toggleOpen = () => setOpen((o) => !o);
 		const { register } = useFormContext<ProductFormData>();
@@ -97,35 +99,37 @@ export const CaseIdentifierSchemaPatternField = React.memo(
 						</Stack>
 					</DialogContent>
 				</Dialog>
-				<TextField
-					{...TextFieldProps}
-					{...register('caseIdentifierSchema.pattern')}
-					label="Case ID Format"
-					fullWidth
-					size={'small'}
-					InputProps={{
-						endAdornment: (
-							<InputAdornment position="end">
-								<IconButton onClick={toggleOpen}>
-									<Info fontSize={'small'} />
-								</IconButton>
-							</InputAdornment>
-						),
-					}}
-				/>
+				<Box width="100%" onFocus={() => setHasFocus(true)} onBlur={()=>setHasFocus(false)}>
+					<TextField
+						{...TextFieldProps}
+						{...register('caseIdentifierSchema.pattern')}
+						label="Case ID Format"
+						fullWidth
+						size={'small'}
+						InputProps={{
+							endAdornment: (
+								<InputAdornment position="end">
+									<IconButton onClick={toggleOpen}>
+										<Info sx={{transition: "all 300ms ease"}} color={hasFocus === true ? "secondary" : "inherit"} fontSize={'small'} />
+									</IconButton>
+								</InputAdornment>
+							),
+						}}
+					/>
+				</Box>
 			</>
 		);
 	},
 );
 
-export const CaseSchemaUniqueField = React.memo(({ CheckboxProps }: { CheckboxProps?: CheckboxProps }) => {
+export const CaseSchemaUniqueField = React.memo(({ CheckboxProps, FormGroupProps }: { FormGroupProps?:FormGroupProps, CheckboxProps?: CheckboxProps }) => {
 	const { control } = useFormContext<ProductFormData>();
 	return (
 		<Controller
 			name={`caseIdentifierSchema.unique`}
 			control={control}
 			render={({ field }) => (
-				<FormGroup>
+				<FormGroup {...FormGroupProps}>
 					<FormControlLabel control={<Checkbox {...field} checked={field.value} {...CheckboxProps} />} label="Unique" />
 				</FormGroup>
 			)}
@@ -133,14 +137,14 @@ export const CaseSchemaUniqueField = React.memo(({ CheckboxProps }: { CheckboxPr
 	);
 });
 
-export const CaseAutoGenField = React.memo(({ CheckboxProps }: { CheckboxProps?: CheckboxProps }) => {
+export const CaseAutoGenField = React.memo(({ CheckboxProps, FormGroupProps }: { FormGroupProps?: FormGroupProps, CheckboxProps?: CheckboxProps }) => {
 	const { control } = useFormContext<ProductFormData>();
 	return (
 		<Controller
 			name={`caseIdentifierSchema.autoGen`}
 			control={control}
 			render={({ field }) => (
-				<FormGroup>
+				<FormGroup {...FormGroupProps}>
 					<FormControlLabel
 						control={<Checkbox {...field} checked={field.value} {...CheckboxProps} />}
 						label="Auto Generate"

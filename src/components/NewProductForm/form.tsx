@@ -5,7 +5,7 @@ import { LoaderOverlay } from '../LoaderOverlay';
 import { useOrgId } from '../../util';
 import { doc, getFirestore, writeBatch } from 'firebase/firestore';
 import { MachineSettings, machineSettingsCollection } from '../../types/MachineSettings';
-import { Button } from '@mui/material';
+import { Box, BoxProps, Button } from '@mui/material';
 
 export type ProductFormData = {
 	machine: string;
@@ -21,7 +21,7 @@ export type ProductFormData = {
 	};
 };
 
-export const NewProductForm = ({ defaultValues, children }: PropsWithChildren<{ defaultValues?: ProductFormData }>) => {
+export const NewProductForm = ({ defaultValues,BoxProps, children }: PropsWithChildren<{ defaultValues?: ProductFormData, BoxProps?: BoxProps }>) => {
 	const orgId = useOrgId();
 	const frm = useForm<ProductFormData>({
 		defaultValues: {
@@ -56,9 +56,9 @@ export const NewProductForm = ({ defaultValues, children }: PropsWithChildren<{ 
 
 	return (
 		<FormProvider {...frm}>
-			<form onSubmit={frm.handleSubmit(onSubmit(orgId, frm))}>
+			<Box component="form" onSubmit={frm.handleSubmit(onSubmit(orgId, frm))} {...BoxProps}>
 				<LoaderOverlay load={frm.formState.isSubmitting}>{children}</LoaderOverlay>
-			</form>
+			</Box>
 		</FormProvider>
 	);
 };
