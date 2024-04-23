@@ -63,6 +63,7 @@ export const UnitSchemaNameField = React.memo(
 		});
 		return (
 			<Autocomplete
+				{...field}
 				onChange={(e, value) => setValue(`unitIdentifierSchema.${index}.name`, value || '')}
 				freeSolo
 				fullWidth
@@ -74,7 +75,6 @@ export const UnitSchemaNameField = React.memo(
 				loading={loading}
 				renderInput={(params) => (
 					<TextField
-						{...field}
 						{...params}
 						size={'small'}
 						label="Name"

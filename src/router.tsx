@@ -16,6 +16,7 @@ import {
 } from './pages';
 import { collection, getDocs, getFirestore, limit, query, where } from 'firebase/firestore';
 import { getAuth } from 'firebase/auth';
+import { NewOrderPage } from './pages/OrdersPage/NewOrderPage';
 
 export default createBrowserRouter([
 	{
@@ -99,11 +100,25 @@ export default createBrowserRouter([
 								path: 'new',
 								element: <NewProductPage />,
 							},
+							{
+								path: ':id',
+								element: <ProductsIndexPage />
+							},
+							{
+								path: ':id/edit',
+								element: <NewProductPage />,
+							}
 						],
 					},
 					{
 						path: 'orders',
 						element: <OrdersPage />,
+						children: [
+							{
+								path: 'new',
+								element: <NewOrderPage />,
+							},
+						],
 					},
 				],
 			},

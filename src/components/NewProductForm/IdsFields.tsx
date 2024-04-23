@@ -1,4 +1,4 @@
-import { useFieldArray, useFormContext } from 'react-hook-form';
+import { useFormContext } from 'react-hook-form';
 import { ProductFormData } from './form';
 import { Autocomplete, TextField, TextFieldProps } from '@mui/material';
 import React, { useEffect, useState } from 'react';
@@ -6,22 +6,25 @@ import { useOrgId } from '../../util';
 import { getDocs, query } from 'firebase/firestore';
 import { productsCollection } from '../../types/Product';
 
-/**
- * Custom hook for managing the attributes field array with react-hook-form.
- * @returns The field array methods and properties from useFieldArray.
- */
-export const useAttributesFields = () => {
-	const { control } = useFormContext<ProductFormData>();
-	return useFieldArray<ProductFormData, 'attributes'>({
-		name: 'attributes',
-		control,
-	});
-};
-
-/**
- * TextField for the attribute name field.
- */
-export const AttributeNameField = React.memo(
+const defaultProductIds = [
+	'UPC',
+	'EAN',
+	'ISBN',
+	'ASIN',
+	'GTIN',
+	'SKU',
+	'MPN',
+	'iMEI',
+	'JAN',
+	'ITF',
+	'ISSN',
+	'IBAN',
+	'NAID',
+	'DOI',
+	'PMID',
+	'ISRC',
+];
+export const IDNameField = React.memo(
 	({ TextFieldProps, index }: { TextFieldProps?: TextFieldProps; index: number }) => {
 		const {
 			setValue,
@@ -39,8 +42,11 @@ export const AttributeNameField = React.memo(
 				const snap = await getDocs(q);
 				const arr = new Map<string, boolean>();
 				snap.forEach((doc) => {
-					doc.data().attributes.forEach((attr: { name: string }) => {
-						arr.set(attr.name, true);
+					doc.data().ids.forEach((id: { name: string }) => {
+						arr.set(id.name, true);
+					});
+					defaultProductIds.forEach((id) => {
+						arr.set(id, true);
 					});
 				});
 				setOptions(Array.from(arr.keys()));
@@ -48,9 +54,9 @@ export const AttributeNameField = React.memo(
 			};
 			fetch();
 		}, [orgId]);
-		const field = register(`attributes.${index}.name` as const, {
-			required: 'Attribute name is required',
-			maxLength: { value: 255, message: 'Attribute name is too long' },
+		const field = register(`ids.${index}.name` as const, {
+			required: 'Identifier name is required',
+			maxLength: { value: 255, message: 'Identifier name is too long' },
 		});
 		return (
 			<Autocomplete
@@ -64,17 +70,16 @@ export const AttributeNameField = React.memo(
 				includeInputInList
 				options={options}
 				onChange={(_e, value) => {
-					setValue(`attributes.${index}.name`, value || '');
+					setValue(`ids.${index}.name`, value || '');
 				}}
 				renderInput={(params) => (
 					<TextField
 						{...params}
-						label="Attribute Name"
+						label="ID Name"
 						fullWidth
 						size="small"
-						placeholder="Color, Size, etc."
-						error={Boolean(errors.attributes?.[index]?.name)}
-						helperText={errors.attributes?.[index]?.name?.message}
+						error={Boolean(errors.ids?.[index]?.name)}
+						helperText={errors.ids?.[index]?.name?.message}
 						{...TextFieldProps}
 					/>
 				)}
@@ -84,9 +89,9 @@ export const AttributeNameField = React.memo(
 );
 
 /**
- * TextField for the attribute value field.
+ * TextField for the identifier value field.
  */
-export const AttributeValueField = React.memo(
+export const IDValueField = React.memo(
 	({ TextFieldProps, index }: { TextFieldProps?: TextFieldProps; index: number }) => {
 		const {
 			watch,
@@ -97,7 +102,7 @@ export const AttributeValueField = React.memo(
 		const [loading, setLoading] = useState(false);
 		const [options, setOptions] = useState<string[]>([]);
 		const orgId = useOrgId();
-		const currentName = watch(`attributes.${index}.name`);
+		const currentName = watch(`ids.${index}.name`);
 		useEffect(() => {
 			if (!orgId) return;
 			const fetch = async () => {
@@ -107,9 +112,9 @@ export const AttributeValueField = React.memo(
 				const arr = new Map<string, boolean>();
 				snap.forEach((doc) => {
 					doc.data()
-						.attributes.filter((attr: { name: string }) => attr.name === currentName)
-						.forEach((attr: { value: string }) => {
-							arr.set(attr.value, true);
+						.ids.filter((id: { name: string }) => id.name === currentName)
+						.forEach((id: { value: string }) => {
+							arr.set(id.value, true);
 						});
 				});
 				setOptions(Array.from(arr.keys()));
@@ -117,9 +122,9 @@ export const AttributeValueField = React.memo(
 			};
 			fetch();
 		}, [orgId, currentName]);
-		const field = register(`attributes.${index}.value` as const, {
-			required: 'Attribute value is required',
-			maxLength: { value: 255, message: 'Attribute value is too long' },
+		const field = register(`ids.${index}.value` as const, {
+			required: 'Identifier value is required',
+			maxLength: { value: 255, message: 'Identifier value is too long' },
 		});
 		return (
 			<Autocomplete
@@ -132,18 +137,17 @@ export const AttributeValueField = React.memo(
 				includeInputInList
 				options={options}
 				onChange={(_e, value) => {
-					setValue(`attributes.${index}.value`, value || '');
+					setValue(`ids.${index}.value`, value || '');
 				}}
 				renderInput={(params) => (
 					<TextField
 						{...params}
 						{...field}
-						label="Attribute Value"
+						label="ID Value"
 						fullWidth
 						size="small"
-						placeholder="Red, Large, etc."
-						error={Boolean(errors.attributes?.[index]?.value)}
-						helperText={errors.attributes?.[index]?.value?.message}
+						error={Boolean(errors.ids?.[index]?.value)}
+						helperText={errors.ids?.[index]?.value?.message}
 						{...TextFieldProps}
 					/>
 				)}

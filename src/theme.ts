@@ -4,15 +4,14 @@ export default createTheme({
 	palette: {
 		// Define the color palette
 		primary: {
-			main: '#29ADB2', // A nice shade of blue
+			main: '#1A7174', // A nice shade of blue
 			// light: '#63a4ff',
 			// dark: '#004ba0',
 			contrastText: '#ffffff',
 		},
 		secondary: {
-			main: '#ffc400', // A complementary color for secondary actions
-			light: '#fff64f',
-			dark: '#c79400',
+			main: '#CC9C00', // A complementary color for secondary actions
+
 			contrastText: '#000000',
 		},
 		// Add additional colors as needed
@@ -23,7 +22,8 @@ export default createTheme({
 			main: '#ff9800',
 		},
 		info: {
-			main: '#2196f3',
+			main: '#440381',
+			contrastText: '#ffffff',
 		},
 		success: {
 			main: '#4caf50',
@@ -74,6 +74,11 @@ export default createTheme({
 					// Reduce padding for buttons
 					padding: '6px 12px',
 				},
+			},
+		},
+		MuiTextField: {
+			defaultProps: {
+				variant: 'filled',
 			},
 		},
 		// Add more component customizations here

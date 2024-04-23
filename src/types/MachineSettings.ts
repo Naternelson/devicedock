@@ -3,7 +3,7 @@ import { toTimestamp } from "../util";
 
 export type DocumentMachineSettings = {
     machine: string;
-    productId: string;
+    productId: string; 
     unitSchemaPrinter: {
         silent: boolean;
         name: string;

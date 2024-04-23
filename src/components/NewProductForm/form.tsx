@@ -12,6 +12,7 @@ export type ProductFormData = {
 	customers: string[];
 	name: ProductType['name'];
 	description: ProductType['description'];
+	ids: ProductType['ids'];
 	attributes: ProductType['attributes'];
 	unitIdentifierSchema: (Omit<ProductType['unitIdentifierSchema'][number], 'labelTemplates'> & {
 		labelTemplates: { autoPrint: boolean; defaultPrinter: string; template: string }[];

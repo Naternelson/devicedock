@@ -21,7 +21,7 @@ export const ProductsTable: React.FC<ProductsTableProps> = ({
 	width = 500,
 }) => {
 	return (
-		<MenuList>
+		<MenuList disablePadding>
 			<List className="delaygroup" height={height} itemCount={products.length} itemSize={RowHeight} width={width}>
 				{({ index, style }) => (
 					<div style={style}>
@@ -39,7 +39,6 @@ export const ProductsTable: React.FC<ProductsTableProps> = ({
 
 const Row = React.memo(
 	({ product, onClick, selected }: { onClick: () => void; product: Product; selected?: boolean }) => {
-		console.log(product);
 		const [appear, setAppear] = useState(false);
 		return (
 			<MenuItem

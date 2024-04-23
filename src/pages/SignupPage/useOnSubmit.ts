@@ -19,7 +19,6 @@ export const useOnSubmit = (frm: UseFormReturn<FormData, any, undefined>) => {
 	const [error, setError] = useState<any>(null);
 	const [isSubmitting, setIsSubmitting] = useState(false);
 	const onSubmit = async (data: FormData) => {
-        console.log({data})
 		setIsSubmitting(true);
 		let result = null;
 		if (data.token && data.token.trim() !== '') {

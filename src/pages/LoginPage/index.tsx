@@ -32,7 +32,6 @@ export const LoginPage = () => {
 			await startDb();
 			const res = await signInWithEmailAndPassword(getAuth(), data.email, data.password);
 			nav('/dashboard');
-			console.log(res);
 		} catch (error) {
 			console.error({ error });
 		}

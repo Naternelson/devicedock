@@ -4,7 +4,8 @@ import { useOrgId } from '../../util';
 import { onSnapshot, orderBy, query } from 'firebase/firestore';
 import { Product, productsCollection } from '../../types/Product';
 import { ProductsTable } from './Table/ProductsTable';
-import { Link as NavLink, Outlet, useLocation, useNavigate } from 'react-router-dom';
+import { Link as NavLink, Outlet, useLocation, useNavigate, useParams } from 'react-router-dom';
+import { TargetProduct } from './Target';
 
 export const ProductsPage = () => {
 	return (
@@ -90,7 +91,6 @@ const NoProductsOverlay = () => {
 				<Button
 					onClick={() => nav('new')}
 					ref={ref}
-					variant="outlined"
 					className="fadedown"
 					sx={{ animationDelay: '.3s' }}>
 					Create New Product
@@ -106,10 +106,13 @@ const NoProductsOverlay = () => {
 };
 
 export const ProductsIndexPage = () => {
+	const {id: targetProductId=null} = useParams();
+
+
+	const nav = useNavigate();
 	const ref = useRef<HTMLDivElement>(null);
 	const orgId = useOrgId();
 	const [products, setProducts] = useState<{id: string, product: Product}[]>([]);
-	const [targetProductId, setTargetProductId] = useState<string | null>(null);
 	useEffect(() => {
 		if (!orgId) return;
 		const q = query(productsCollection(orgId), orderBy('name'));
@@ -122,12 +125,14 @@ export const ProductsIndexPage = () => {
 		});
 	}, [orgId]);
 	const handleProductTarget = (id: string) => {
-		setTargetProductId(id);
+		nav("/dashboard/products/" + id);
 	};
+
+
 	const tableHeight = useResize(ref, products.length);
 	if (products.length === 0) return <NoProductsOverlay />;
 	return (
-		<Box ref={ref} >
+		<Stack ref={ref} direction="row" flex={1} gap={"2rem"} justifyContent={"space-between"}>
 			<ProductsTable
 				targetProduct={targetProductId  || ''}
 				handleProductTarget={handleProductTarget}
@@ -135,7 +140,8 @@ export const ProductsIndexPage = () => {
 				height={tableHeight}
 				width={300}
 			/>
-		</Box>
+			<TargetProduct productId={targetProductId} product={products.find(el => el.id === targetProductId)?.product || null}/>
+		</Stack>
 	);
 };
 

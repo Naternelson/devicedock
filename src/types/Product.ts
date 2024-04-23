@@ -4,6 +4,10 @@ export type DocumentProduct = {
     name: string,
     description: string,
     customers: string[],
+    ids: {
+        name: string, 
+        value: string, 
+    }[],
     /**
      * Custom attributes for the product, could be color, size, weight, etc.
      */
@@ -56,6 +60,7 @@ export class Product implements ProductType {
 			name: product.name,
 			description: product.description,
 			customers: product.customers,
+            ids: product.ids,
 			attributes: product.attributes,
 			unitIdentifierSchema: product.unitIdentifierSchema,
 			caseIdentifierSchema: product.caseIdentifierSchema,
@@ -70,6 +75,7 @@ export class Product implements ProductType {
 		product.name = data.name;
 		product.description = data.description;
 		product.customers = data.customers;
+        product.ids = data.ids;
 		product.attributes = data.attributes;
 		product.unitIdentifierSchema = data.unitIdentifierSchema;
 		product.caseIdentifierSchema = data.caseIdentifierSchema;
@@ -79,6 +85,7 @@ export class Product implements ProductType {
 	}
 	name: ProductType['name'] = '';
 	description: ProductType['description'] = '';
+    ids: ProductType['ids'] = [];
 	attributes: ProductType['attributes'] = [];
 	unitIdentifierSchema: ProductType['unitIdentifierSchema'] = [];
 	caseIdentifierSchema: ProductType['caseIdentifierSchema'] = {
