@@ -7,9 +7,9 @@ import { Outlet, useLocation, useNavigate } from 'react-router-dom';
 export const DashboardLayout = () => {
 	const nav = useNavigate();
 	useEffect(() => {
-		onAuthStateChanged(getAuth(), (user) => {
+		return onAuthStateChanged(getAuth(), (user) => {
 			if (!user) {
-				nav('/login');
+				nav('/login', { replace: true });
 			}
 		});
 	}, [nav]);

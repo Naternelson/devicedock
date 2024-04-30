@@ -31,7 +31,10 @@ export const useAuth = () => {
                 }
 			};
 			retrieveUser();
-		}
+		} else {
+            setUserData(null)
+            setUserDataLoading(false)
+        }
 	}, [uid]);
     return {
         user, userData, loading: loading || userDataLoading, error

@@ -1,5 +1,5 @@
 import { FormProvider, UseFormReturn, useForm } from 'react-hook-form';
-import { PropsWithChildren, useEffect } from 'react';
+import { PropsWithChildren } from 'react';
 import { useOrgId } from '../../util/useOrgId';
 import {
 	DocumentData,
@@ -75,14 +75,11 @@ export const NewOrderForm = ({
 		defaultValues: {
 			...defaultValues,
 			customerId: { name: customername || '', id: customerid || null },
-			ids: [{ name: idname || "Order ID" , value: idvalue || '' }], // Default to one empty ID
+			ids: [{ name: idname || 'Order ID', value: idvalue || '' }], // Default to one empty ID
 			orderItems: [{ productId: product || '', quantity: Number(quantity) || 1, notes: '' }],
 		},
 	});
 	const handleSubmit = onSubmit({ orgId, frm, onSuccess, onError });
-
-	const customerId = frm.watch('customerId');
-
 
 	return (
 		<FormProvider {...frm}>
@@ -103,7 +100,6 @@ const onSubmit =
 		onError?: (error: any, form: UseFormReturn<OrderFormData>) => void;
 	}) =>
 	async (data: OrderFormData) => {
-
 		const { orgId, frm, onSuccess, onError } = params;
 		if (!orgId) return;
 		const b = writeBatch(getFirestore());

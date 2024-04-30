@@ -12,9 +12,9 @@ import {
 import { useNavigate } from 'react-router-dom';
 import { LoaderOverlay } from '../../components';
 import { FormProvider, useForm, useFormContext } from 'react-hook-form';
-import { getAuth, signInWithEmailAndPassword } from 'firebase/auth';
+import { getAuth, onAuthStateChanged, signInWithEmailAndPassword } from 'firebase/auth';
 import { Visibility, VisibilityOff } from '@mui/icons-material';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { startDb } from '../../firebase.config';
 
 interface FormData {
@@ -30,12 +30,18 @@ export const LoginPage = () => {
 	const onSubmit = async (data: FormData) => {
 		try {
 			await startDb();
-			const res = await signInWithEmailAndPassword(getAuth(), data.email, data.password);
-			nav('/dashboard');
+			await signInWithEmailAndPassword(getAuth(), data.email, data.password);
 		} catch (error) {
 			console.error({ error });
 		}
 	};
+	useEffect(()=>{
+		return onAuthStateChanged(getAuth(), (user) => {
+			if (user) {
+				nav('/dashboard', { replace: true });
+			}
+		});
+	},[nav])
 	return (
 		<Box maxWidth={'500px'} margin={'auto'}>
 			<FormProvider {...frm}>

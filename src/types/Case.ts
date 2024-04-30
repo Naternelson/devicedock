@@ -1,4 +1,4 @@
-import { Timestamp, collection, getFirestore } from "firebase/firestore";
+import { QueryDocumentSnapshot, SnapshotOptions, Timestamp, collection, getFirestore } from "firebase/firestore";
 import { toTimestamp } from "../util";
 
 export type DocumentCase = {
@@ -14,17 +14,17 @@ export type DocumentCase = {
 export type CreationCase = Omit<DocumentCase, 'createdAt' | 'updatedAt'>;
 export type UpdateCase = Partial<CreationCase>;
 
-export type CaseType = CreationCase & { createdAt?: string; updatedAt?: string };
+export type CaseType = CreationCase & { createdAt?: string; updatedAt?: string; id?: string };
 
 export class Case implements CaseType {
 	static readonly accessRules = {
 		read: 'user',
 		write: 'user',
-        scope: 'organization'
+		scope: 'organization',
 	};
-	static toFirestore(caseValue: CaseType): DocumentCase {
+	static toFirestore(caseValue: Case): DocumentCase {
 		return {
-            productId: caseValue.productId,
+			productId: caseValue.productId,
 			orderId: caseValue.orderId,
 			shipmentId: caseValue.shipmentId,
 			caseId: caseValue.caseId,
@@ -33,11 +33,12 @@ export class Case implements CaseType {
 			updatedAt: toTimestamp(caseValue.updatedAt),
 		};
 	}
-	static fromFirestore(snapshot: any, options: any): Case {
+	static fromFirestore(snapshot: QueryDocumentSnapshot<DocumentCase>, options: SnapshotOptions): Case {
 		const data = snapshot.data(options);
 
 		const caseValue = new Case();
-        caseValue.productId = data.productId;
+		caseValue.id = snapshot.id;
+		caseValue.productId = data.productId;
 		caseValue.orderId = data.orderId;
 		caseValue.shipmentId = data.shipmentId;
 		caseValue.caseId = data.caseId;
@@ -46,7 +47,8 @@ export class Case implements CaseType {
 		caseValue.updatedAt = data.updatedAt?.toDate().toISOString();
 		return caseValue;
 	}
-    productId: CaseType['productId'] = '';
+	id: CaseType['id'];
+	productId: CaseType['productId'] = '';
 	orderId: CaseType['orderId'] = '';
 	shipmentId: CaseType['shipmentId'] = '';
 	caseId: CaseType['caseId'] = '';

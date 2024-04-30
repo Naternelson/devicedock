@@ -24,7 +24,6 @@ export const RootLayout = () => {
 				<FauxNav />
 				<Outlet />
 			</Box>
-			{/* <FooterBar /> */}
 		</Box>
 	);
 };
@@ -74,21 +73,3 @@ const FauxNav = styled("div")(() => {
 		width: "100%",
 	}
 })
-
-// const FooterBar = () => {
-//     return (
-//         <StyledFooter>
-//             <p>&copy; 2021 My Company</p>
-//         </StyledFooter>
-//     );
-// }
-
-// const StyledFooter = styled('footer')(({ theme }) => ({
-//     backgroundColor: theme.palette.primary.dark,
-//     color: theme.palette.primary.contrastText,
-    
-//     width: '100%',
-//     padding: '1rem',
-//     textAlign: 'center',
-//     boxSizing: 'border-box',
-// }));

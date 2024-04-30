@@ -3,9 +3,10 @@ import { toTimestamp } from '../util';
 
 export enum OrderStatus {
 	PENDING = 'pending',
-	CONFIRMED = 'confirmed',
+	ACTIVE = 'active',
+	PAUSED = 'paused',
 	CANCELLED = 'cancelled',
-	DELIVERED = 'delivered',
+	ERROR= 'error',
 	COMPLETED = 'completed',
 }
 
@@ -33,6 +34,7 @@ export type OrderType = CreationOrder & {
 	updatedAt?: string;
 	orderedDate?: string;
 	dueDate?: string;
+	id?: string; 
 };
 
 export class Order implements OrderType {
@@ -58,6 +60,7 @@ export class Order implements OrderType {
 	static fromFirestore(snapshot: QueryDocumentSnapshot<DocumentOrder>, options: SnapshotOptions): Order {
 		const data = snapshot.data(options);
 		const order = new Order();
+		order.id = snapshot.id;
 		order.documents = data.documents;
 		order.customerId = data.customerId;
 		order.orderItems = data.orderItems;
@@ -71,6 +74,7 @@ export class Order implements OrderType {
 		order.updatedAt = data.updatedAt?.toDate().toISOString();
 		return order;
 	}
+	id: OrderType['id'];
 	documents: OrderType['documents'] = [];
 	customerId: OrderType['customerId'] = '';
 	orderItems: OrderType['orderItems'] = [];

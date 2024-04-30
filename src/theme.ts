@@ -10,9 +10,9 @@ export default createTheme({
 			contrastText: '#ffffff',
 		},
 		secondary: {
-			main: '#CC9C00', // A complementary color for secondary actions
+			main: '#3A3042', // A complementary color for secondary actions
 
-			contrastText: '#000000',
+			contrastText: '#F9F8F4',
 		},
 		// Add additional colors as needed
 		error: {
@@ -26,7 +26,8 @@ export default createTheme({
 			contrastText: '#ffffff',
 		},
 		success: {
-			main: '#4caf50',
+			main: '#38803A',
+			contrastText: '#ffffff',
 		},
 		text: {
 			primary: '#333333', // Softer than black for main text
@@ -76,9 +77,31 @@ export default createTheme({
 				},
 			},
 		},
+		MuiButtonBase: {
+			styleOverrides: {
+				root: {
+					padding: '6px 12px',
+				}
+			}
+		},
 		MuiTextField: {
 			defaultProps: {
 				variant: 'filled',
+			},
+		},
+		MuiTabs:{
+			styleOverrides:{
+				root:{
+					minHeight: '40px',
+				}
+			}
+		},
+		MuiTab: {
+			styleOverrides: {
+				root: {
+					minWidth: '75px',
+					minHeight: '30px',
+				},
 			},
 		},
 		// Add more component customizations here

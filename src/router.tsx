@@ -15,8 +15,9 @@ import {
 	NewProductPage,
 } from './pages';
 import { collection, getDocs, getFirestore, limit, query, where } from 'firebase/firestore';
-import { getAuth } from 'firebase/auth';
+import { getAuth, onAuthStateChanged } from 'firebase/auth';
 import { NewOrderPage } from './pages/OrdersPage/NewOrderPage';
+import { OrdersIndexPage } from './pages/OrdersPage/OrderIndex';
 
 export default createBrowserRouter([
 	{
@@ -39,16 +40,11 @@ export default createBrowserRouter([
 			{
 				path: 'login',
 				element: <LoginPage />,
-				loader: async () => {
-					getAuth().currentUser && redirect('/dashboard');
-					return {};
-				},
 			},
 			{
 				path: 'signup',
 				element: <SignupPage />,
 				loader: async ({ request }) => {
-					getAuth().currentUser && redirect('/dashboard');
 					const url = new URL(request.url);
 
 					// Getting the orgCode from the searchParams
@@ -79,10 +75,6 @@ export default createBrowserRouter([
 			{
 				path: 'dashboard',
 				element: <DashboardLayout />,
-				loader: async () => {
-					!getAuth().currentUser && redirect('/login');
-					return {};
-				},
 				children: [
 					{
 						index: true,
@@ -102,18 +94,23 @@ export default createBrowserRouter([
 							},
 							{
 								path: ':id',
-								element: <ProductsIndexPage />
+								element: <ProductsIndexPage />,
 							},
 							{
 								path: ':id/edit',
 								element: <NewProductPage />,
-							}
+							},
 						],
 					},
 					{
 						path: 'orders',
 						element: <OrdersPage />,
 						children: [
+							{
+								index: true,
+								element: <OrdersIndexPage />,
+							},
+
 							{
 								path: 'new',
 								element: <NewOrderPage />,

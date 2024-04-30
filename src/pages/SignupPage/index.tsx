@@ -15,11 +15,12 @@ import {
 	Typography,
 } from '@mui/material';
 import { grey } from '@mui/material/colors';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { FormProvider, useForm, useFormContext } from 'react-hook-form';
-import { Link, useLoaderData } from 'react-router-dom';
+import { Link, useLoaderData, useNavigate } from 'react-router-dom';
 import { FormData, useOnSubmit } from './useOnSubmit';
 import { LoaderOverlay } from '../../components';
+import { getAuth, onAuthStateChanged } from 'firebase/auth';
 
 export const SignupPage = () => {
 	const loaderData = useLoaderData() as {
@@ -33,6 +34,15 @@ export const SignupPage = () => {
 			organizationName: loaderData.orgName || '',
 		},
 	});
+	const nav = useNavigate();
+	useEffect(()=>{
+		return onAuthStateChanged(getAuth(), (user) =>{
+			if(user){
+				nav('/dashboard', {replace: true})
+			}
+		})
+	})
+
 	const { onSubmit, error, isSubmitting } = useOnSubmit(frm);
 	const submitHandler = frm.handleSubmit(onSubmit);
 	return (

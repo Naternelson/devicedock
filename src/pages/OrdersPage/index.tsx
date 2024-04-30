@@ -6,24 +6,12 @@ import { getDocs, getFirestore, writeBatch } from "firebase/firestore";
 
 
 export const OrdersPage = () => {
-	const orgId = useOrgId();
-	const deleteAllOrders = async () => {
-		if(!orgId) return;
-		
-		const snap = await getDocs(ordersCollection(orgId))
-		const batch = writeBatch(getFirestore());
-		snap.forEach(doc => {
-			batch.delete(doc.ref);
-		});	
-		await batch.commit();
-		alert('All orders deleted');
-	}
+	
 	return (
 		<Box display="flex" flex={1} flexDirection={'column'}>
 			<OrdersBreadcrumbs />
 			<Box display="flex" flex={1}>
 				<Outlet />
-				<Button onClick={deleteAllOrders}>Delete All Orders</Button>
 			</Box>
 		</Box>
 	);

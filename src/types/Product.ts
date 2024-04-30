@@ -47,7 +47,7 @@ export type DocumentProduct = {
 export type CreationProduct = Omit<DocumentProduct, 'createdAt' | 'updatedAt'>;
 export type UpdateProduct = Partial<CreationProduct>;
 
-export type ProductType = CreationProduct & {createdAt?: string, updatedAt?: string}
+export type ProductType = CreationProduct & {createdAt?: string, updatedAt?: string; id?: string}
 
 export class Product implements ProductType {
     static readonly accessRules = {
@@ -55,7 +55,7 @@ export class Product implements ProductType {
         write: 'user',
         scope: 'organization'
     }
-	static toFirestore(product: ProductType): DocumentProduct {
+	static toFirestore(product: Product): DocumentProduct {
 		return {
 			name: product.name,
 			description: product.description,
@@ -72,6 +72,7 @@ export class Product implements ProductType {
 		const data = snapshot.data(options);
 
 		const product = new Product();
+        product.id = snapshot.id;
 		product.name = data.name;
 		product.description = data.description;
 		product.customers = data.customers;
@@ -83,6 +84,7 @@ export class Product implements ProductType {
 		product.updatedAt = data.updatedAt?.toDate().toISOString();
 		return product;
 	}
+    id: ProductType['id']
 	name: ProductType['name'] = '';
 	description: ProductType['description'] = '';
     ids: ProductType['ids'] = [];
