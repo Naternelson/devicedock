@@ -1,4 +1,4 @@
-import { createBrowserRouter, redirect } from 'react-router-dom';
+import { createBrowserRouter } from 'react-router-dom';
 import {
 	DashboardHome,
 	DashboardLayout,
@@ -15,7 +15,6 @@ import {
 	NewProductPage,
 } from './pages';
 import { collection, getDocs, getFirestore, limit, query, where } from 'firebase/firestore';
-import { getAuth, onAuthStateChanged } from 'firebase/auth';
 import { NewOrderPage } from './pages/OrdersPage/NewOrderPage';
 import { OrdersIndexPage } from './pages/OrdersPage/OrderIndex';
 

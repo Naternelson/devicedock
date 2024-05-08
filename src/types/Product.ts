@@ -22,6 +22,7 @@ export type DocumentProduct = {
         name: string, 
         count: number, 
         pattern: string,
+        patternMessage: string,
         transform: 'UPPERCASE' | 'LOWERCASE' | 'NONE'
         unique: boolean,
         defaultValue: string,

@@ -2,9 +2,13 @@ import { Category, Home, StickyNote2 } from '@mui/icons-material';
 import { Box, ClickAwayListener, Collapse, MenuItem, MenuList, Stack, Typography } from '@mui/material';
 import { getAuth, onAuthStateChanged } from 'firebase/auth';
 import { PropsWithChildren, useEffect, useRef, useState } from 'react';
-import { Outlet, useLocation, useNavigate } from 'react-router-dom';
+import { Outlet, useLocation, useNavigate, useSearchParams } from 'react-router-dom';
+import { BuildPage } from './Build';
 
 export const DashboardLayout = () => {
+	const location = useLocation();
+	const [searchParams] = useSearchParams();
+	const orderId = searchParams.get('orderId');
 	const nav = useNavigate();
 	useEffect(() => {
 		return onAuthStateChanged(getAuth(), (user) => {
@@ -13,11 +17,12 @@ export const DashboardLayout = () => {
 			}
 		});
 	}, [nav]);
+	const goToBuild = location.pathname === '/dashboard/' && orderId;
 	return (
 		<Box display={'flex'} flexDirection={'row'} flex={1} sx={{ boxSizing: 'border-box' }}>
 			<SideNav />
 			<Box flex={1} display={'flex'} height={'calc(100vh - 1.75rem)'} padding={'1rem'} sx={{ overflow: 'auto' }}>
-				<Outlet />
+				{goToBuild ? <BuildPage /> : <Outlet />}
 			</Box>
 		</Box>
 	);

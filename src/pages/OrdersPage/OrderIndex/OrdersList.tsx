@@ -31,7 +31,7 @@ import {
 import { useEffect, useState } from 'react';
 import { LimitSelectBox } from '../../../components/LimitSelectBox';
 import { Order, OrderStatus, ordersCollection } from '../../../types/Order';
-import { statusColor, useOrgId, useSearch } from '../../../util';
+import { statusColor, useOrgId } from '../../../util';
 import { OrderStatusIndicator } from '../../../components/OrderStatus';
 import { Product, productsCollection } from '../../../types/Product';
 import { useNavigate, useSearchParams } from 'react-router-dom';

@@ -16,7 +16,7 @@ export default createTheme({
 		},
 		// Add additional colors as needed
 		error: {
-			main: '#f44336',
+			main: '#AE1409',
 		},
 		warning: {
 			main: '#ff9800',
@@ -81,20 +81,20 @@ export default createTheme({
 			styleOverrides: {
 				root: {
 					padding: '6px 12px',
-				}
-			}
+				},
+			},
 		},
 		MuiTextField: {
 			defaultProps: {
 				variant: 'filled',
 			},
 		},
-		MuiTabs:{
-			styleOverrides:{
-				root:{
+		MuiTabs: {
+			styleOverrides: {
+				root: {
 					minHeight: '40px',
-				}
-			}
+				},
+			},
 		},
 		MuiTab: {
 			styleOverrides: {

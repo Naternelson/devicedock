@@ -1,21 +1,9 @@
-import {
-	AppBar,
-	Button,
-	Dialog,
-	DialogActions,
-	DialogContent,
-	DialogTitle,
-	Divider,
-	Stack,
-	Tab,
-	Tabs,
-	Typography,
-} from '@mui/material';
+import { AppBar,  Button, Divider, Stack, Tab, Tabs, Typography } from '@mui/material';
 import { useEffect, useState } from 'react';
 import { useSearchParams } from 'react-router-dom';
-import { Order, OrderStatus, ordersCollection } from '../../../../types/Order';
-import { useAppNav, useNavOrders, useOrgId } from '../../../../util';
-import { deleteDoc, doc, onSnapshot,  updateDoc } from 'firebase/firestore';
+import { Order, ordersCollection } from '../../../../types/Order';
+import { useAppNav, useOrgId } from '../../../../util';
+import { doc, onSnapshot } from 'firebase/firestore';
 import { useContainer } from '../../../../util/useContainer';
 import { OrderOverview } from './OrderOverview';
 import { OrderContent, useOrder } from './utils';
@@ -60,8 +48,10 @@ export const OrderDetails = () => {
 				gap={'0.5rem'}
 				sx={{ overflow: 'auto', boxSizing: 'border-box' }}
 				divider={<Divider flexItem />}>
-				<OrderTitle />
-				<ActionBar />
+				<Stack gap={'1rem'} marginY={'1rem'} className={'delaygroup'}>
+					<OrderTitle />
+					<ActionBar />
+				</Stack>
 				<Stack flex={1}>
 					<TabsHeader />
 					<Stack direction="row" id={'hello'} flex={1} sx={{ flexGrow: 1 }}>
@@ -78,23 +68,19 @@ const OrderTitle = () => {
 	const { order } = useOrder()!;
 	return (
 		<Stack direction="column" alignItems={'center'} className="delaygroup">
-			{order.ids.map((id, index) => {
-				return (
-					<Stack
-		
-						direction={index === 0 ? 'column' : 'row-reverse'}
-						alignItems={'center'}
-						key={id.value}
-						gap={'.25rem'}
-						className="fadeup">
-						<Typography fontWeight={400} variant={index === 0 ? 'h1' : 'subtitle1'}>{id.value}</Typography>
-						<Divider flexItem />
-						<Typography fontStyle={'italic'} variant="caption" lineHeight={'1.5rem'}>
-							{id.name} {index === 0 ? null : ':'}
-						</Typography>
-					</Stack>
-				);
-			})}
+			<Stack
+				direction={"column"}
+				alignItems={'center'}
+				gap={'.25rem'}
+				className="fadeup">
+				<Typography fontWeight={400} variant={'h1' }>
+					{order.ids[0].value}
+				</Typography>
+				<Divider flexItem />
+				<Typography fontStyle={'italic'} variant="caption" lineHeight={'1.5rem'}>
+					{order.ids[0].name}
+				</Typography>
+			</Stack>
 		</Stack>
 	);
 };
@@ -104,13 +90,17 @@ const ActionBar = () => {
 	const { navigate: nav } = useAppNav('/dashboard');
 	return (
 		<Stack direction="row" justifyContent="center" gap={'3rem'} alignItems="center">
-			<Button variant="contained" onClick={() => nav({ to: '?orderId=' + order.id })}>
+			<Button
+				color="primary"
+				className="fadeup"
+				variant="contained"
+				fullWidth
+				onClick={() => nav({ to: '?orderId=' + order.id })}>
 				Build
 			</Button>
 		</Stack>
 	);
 };
-
 
 const tabs = (count: number) => ['Overview', count > 1 ? 'Products' : 'Product', 'Cases', 'Customer'];
 const TabsHeader = () => {

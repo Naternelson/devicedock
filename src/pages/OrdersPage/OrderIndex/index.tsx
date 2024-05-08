@@ -1,17 +1,9 @@
 import {
 	Box,
-	Button,
 	Paper,
 	Stack,
 	Typography,
 } from '@mui/material';
-import {
-	getDocs,
-	getFirestore,
-	writeBatch,
-} from 'firebase/firestore';
-import { ordersCollection } from '../../../types/Order';
-import {  useOrgId } from '../../../util';
 import { OrdersList } from './OrdersList';
 import { OrderDetails } from './OrderDetails';
 
@@ -54,20 +46,3 @@ const HeroBanner = () => {
 		</Box>
 	);
 };
-
-const DeleteAllOrdersButton = () => {
-	const orgId = useOrgId();
-	const deleteAllOrders = async () => {
-		if (!orgId) return;
-
-		const snap = await getDocs(ordersCollection(orgId));
-		const batch = writeBatch(getFirestore());
-		snap.forEach((doc) => {
-			batch.delete(doc.ref);
-		});
-		await batch.commit();
-		alert('All orders deleted');
-	};
-	return <Button onClick={deleteAllOrders}>Delete All Orders</Button>;
-};
-

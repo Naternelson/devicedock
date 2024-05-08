@@ -55,6 +55,7 @@ export const UnitIdSchemaGroup = () => {
 			name: '',
 			count: 1,
 			pattern: '',
+			patternMessage: '',
 			transform: 'NONE',
 			unique: true,
 			defaultValue: '',
@@ -89,7 +90,7 @@ export const UnitIdSchemaGroup = () => {
 								<UnitSchemaCountField TextFieldProps={{ className: 'fadeup' }} index={index} />
 							</Box>
 						</Stack>
-						<Box onFocus={() => setFocusField('pattern')}>
+						<Box onFocus={() => setFocusField('patternMessage')}>
 							<UnitSchemaPatternField index={index} TextFieldProps={{ className: 'fadeup' }} />
 						</Box>
 						<Stack direction={'row'} gap={'1rem'}>

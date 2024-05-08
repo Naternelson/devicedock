@@ -152,15 +152,9 @@ const CaseSummary = ({ caseDetails }: { caseDetails: Case }) => {
 					variant="subtitle2"
 					textTransform={'capitalize'}
 					sx={{
-						width: '100px',
-						color: (t) =>
-							caseDetails.status === 'full'
-								? t.palette.success.main
-								: caseDetails.status === 'partial'
-								? t.palette.primary.main
-								: t.palette.grey[500],
+						width: '100px'
 					}}>
-					{caseDetails.status}
+					{caseDetails.count}
 				</Typography>
 				<Typography variant="subtitle2" sx={{ width: '100px' }}>
 					{new Date(caseDetails.createdAt || new Date()).toLocaleDateString()}

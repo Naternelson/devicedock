@@ -6,7 +6,8 @@ export type DocumentCase = {
 	orderId: string;
 	shipmentId: string;
 	caseId: string;
-	status: 'full' | 'partial' | 'empty';
+	count: number; 
+	maxSize: number; 
 	createdAt: Timestamp;
 	updatedAt: Timestamp;
 };
@@ -28,7 +29,8 @@ export class Case implements CaseType {
 			orderId: caseValue.orderId,
 			shipmentId: caseValue.shipmentId,
 			caseId: caseValue.caseId,
-			status: caseValue.status,
+			count: caseValue.count,
+			maxSize: caseValue.maxSize,
 			createdAt: toTimestamp(caseValue.createdAt),
 			updatedAt: toTimestamp(caseValue.updatedAt),
 		};
@@ -42,7 +44,8 @@ export class Case implements CaseType {
 		caseValue.orderId = data.orderId;
 		caseValue.shipmentId = data.shipmentId;
 		caseValue.caseId = data.caseId;
-		caseValue.status = data.status;
+		caseValue.count = data.count;
+		caseValue.maxSize = data.maxSize;
 		caseValue.createdAt = data.createdAt?.toDate().toISOString();
 		caseValue.updatedAt = data.updatedAt?.toDate().toISOString();
 		return caseValue;
@@ -52,7 +55,8 @@ export class Case implements CaseType {
 	orderId: CaseType['orderId'] = '';
 	shipmentId: CaseType['shipmentId'] = '';
 	caseId: CaseType['caseId'] = '';
-	status: CaseType['status'] = 'empty';
+	count: CaseType['count'] = 0;
+	maxSize: CaseType['maxSize'] = 0;
 	createdAt?: string | undefined;
 	updatedAt?: string | undefined;
 }
